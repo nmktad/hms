@@ -4,9 +4,6 @@ import { useRouter } from "next/router";
 import { signIn, signOut } from "next-auth/react";
 import type { Session } from "next-auth";
 
-// import NotificationDropdown from "components/Dropdowns/NotificationDropdown.js";
-// import UserDropdown from "components/Dropdowns/UserDropdown.js";
-
 export default function RootLayout({
   children,
   sessionData,
@@ -19,15 +16,6 @@ export default function RootLayout({
   const router = useRouter();
   return (
     <>
-      {/* <>
-        <sidebar />
-        <AdminNavbar />
-        <HeaderStats />
-          {children}
-          <FooterAdmin />
-        </div>
-    
-    </> */}
       <nav className="relative z-10 flex flex-wrap items-center justify-between bg-white py-4 px-6 shadow-xl md:fixed md:left-0 md:top-0 md:bottom-0 md:block md:w-64 md:flex-row md:flex-nowrap md:overflow-hidden md:overflow-y-auto">
         <div className="mx-auto flex w-full flex-wrap items-center justify-between px-0 md:min-h-full md:flex-col md:flex-nowrap md:items-stretch">
           {/* Toggler */}
@@ -43,16 +31,9 @@ export default function RootLayout({
             type="button"
             onClick={() => setCollapseShow("bg-white m-2 py-3 px-6")}
           >
-            open bar
+            open
           </button>
-          {/* User */}
-          <ul className="flex list-none flex-wrap items-center md:hidden">
-            <li className="relative inline-block">
-              {/* <NotificationDropdown /> */}
-            </li>
-            <li className="relative inline-block">{/* <UserDropdown /> */}</li>
-          </ul>
-          {/* Collapse */}
+
           <div
             className={
               "absolute top-0 left-0 right-0 z-40 h-auto flex-1 items-center overflow-y-auto overflow-x-hidden rounded shadow md:relative md:mt-4 md:flex md:flex-col md:items-stretch md:opacity-100 md:shadow-none " +
@@ -76,7 +57,7 @@ export default function RootLayout({
                     className="cursor-pointer rounded border border-solid border-transparent bg-transparent px-3 py-1 text-xl leading-none text-black opacity-50 md:hidden"
                     onClick={() => setCollapseShow("hidden")}
                   >
-                    <i className="fas fa-times"></i>
+                    <i className="fas fa-times">close</i>
                   </button>
                 </div>
               </div>
@@ -92,57 +73,60 @@ export default function RootLayout({
               </div>
             </form>
 
-            {/* Divider */}
-            <hr className="my-4 md:min-w-full" />
-            {/* Heading */}
-            <h6 className="text-blueGray-500 block pt-1 pb-4 text-xs font-bold uppercase no-underline md:min-w-full">
-              Admin Layout Pages
-            </h6>
-            {/* Navigation */}
+            {sessionData.role === "ADMIN" && (
+              <>
+                {/* Divider */}
+                <hr className="my-4 md:min-w-full" />
+                {/* Heading */}
+                <h6 className="text-blueGray-500 block pt-1 pb-4 text-xs font-bold uppercase no-underline md:min-w-full">
+                  Admin Layout Pages
+                </h6>
+                {/* Navigation */}
 
-            <ul className="flex list-none flex-col md:min-w-full md:flex-col">
-              <li className="items-center">
-                <Link
-                  href="/admin/maps"
-                  className={
-                    "block py-3 text-xs font-bold uppercase " +
-                    (router.pathname.indexOf("/admin/maps") !== -1
-                      ? "text-lightBlue-500 hover:text-lightBlue-600"
-                      : "text-blueGray-700 hover:text-blueGray-500")
-                  }
-                >
-                  <i
-                    className={
-                      "fas fa-map-marked mr-2 text-sm " +
-                      (router.pathname.indexOf("/admin/maps") !== -1
-                        ? "opacity-75"
-                        : "text-blueGray-300")
-                    }
-                  ></i>{" "}
-                  Maps
-                </Link>
-              </li>
-            </ul>
+                <ul className="flex list-none flex-col md:min-w-full md:flex-col">
+                  <li className="items-center">
+                    <Link
+                      href="/admin/maps"
+                      className={
+                        "block py-3 text-xs font-bold uppercase " +
+                        (router.pathname.indexOf("/admin/maps") !== -1
+                          ? "text-lightBlue-500 hover:text-lightBlue-600"
+                          : "text-blueGray-700 hover:text-blueGray-500")
+                      }
+                    >
+                      <i
+                        className={
+                          "fas fa-map-marked mr-2 text-sm " +
+                          (router.pathname.indexOf("/admin/maps") !== -1
+                            ? "opacity-75"
+                            : "text-blueGray-300")
+                        }
+                      ></i>{" "}
+                      Maps
+                    </Link>
+                  </li>
+                </ul>
+                {/* Divider */}
+                <hr className="my-4 md:min-w-full" />
+                {/* Heading */}
+                <h6 className="text-blueGray-500 block pt-1 pb-4 text-xs font-bold uppercase no-underline md:min-w-full">
+                  Auth Layout Pages
+                </h6>
+                {/* Navigation */}
 
-            {/* Divider */}
-            <hr className="my-4 md:min-w-full" />
-            {/* Heading */}
-            <h6 className="text-blueGray-500 block pt-1 pb-4 text-xs font-bold uppercase no-underline md:min-w-full">
-              Auth Layout Pages
-            </h6>
-            {/* Navigation */}
-
-            <ul className="flex list-none flex-col md:mb-4 md:min-w-full md:flex-col">
-              <li className="items-center">
-                <Link
-                  href="/auth/register"
-                  className="text-blueGray-700 hover:text-blueGray-500 block py-3 text-xs font-bold uppercase"
-                >
-                  <i className="fas fa-clipboard-list text-blueGray-300 mr-2 text-sm"></i>{" "}
-                  Register
-                </Link>
-              </li>
-            </ul>
+                <ul className="flex list-none flex-col md:mb-4 md:min-w-full md:flex-col">
+                  <li className="items-center">
+                    <Link
+                      href="/auth/register"
+                      className="text-blueGray-700 hover:text-blueGray-500 block py-3 text-xs font-bold uppercase"
+                    >
+                      <i className="fas fa-clipboard-list text-blueGray-300 mr-2 text-sm"></i>{" "}
+                      Register
+                    </Link>
+                  </li>
+                </ul>
+              </>
+            )}
 
             {/* Divider */}
             <hr className="my-4 md:min-w-full" />
@@ -174,15 +158,9 @@ export default function RootLayout({
               </li>
             </ul>
 
-            {/* Divider */}
-            <hr className="my-4 md:min-w-full" />
-            {/* Heading */}
-            <h6 className="text-blueGray-500 block pt-1 pb-4 text-xs font-bold uppercase no-underline md:min-w-full">
-              Documentation
-            </h6>
-            {/* Divider */}
-            <hr className="my-4 md:min-w-full" />
             {/* Navigation */}
+            {/* spacer */}
+            <div className="flex flex-1"></div>
             <button
               className="rounded-full bg-white/10 px-10 py-3 font-semibold  no-underline transition hover:bg-white/20"
               onClick={
@@ -198,11 +176,9 @@ export default function RootLayout({
       </nav>
 
       <div className="bg-blueGray-100 relative md:ml-64">
-        <div className="mx-auto w-full px-4 md:px-10">
-          <main className="flex min-h-screen flex-col items-center justify-center">
-            hello world
-            {children}
-          </main>
+        <div className="mx-auto min-h-screen w-full p-4 md:p-8">
+          hello world
+          {children}
         </div>
       </div>
     </>
