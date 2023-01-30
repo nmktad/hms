@@ -36,7 +36,6 @@ export const authOptions: NextAuthOptions = {
       if (account && account.type === "credentials") {
         return {
           ...token,
-
           id: user.id,
           name: user.name,
           email: user.email,
@@ -54,6 +53,9 @@ export const authOptions: NextAuthOptions = {
         ...token,
       };
     },
+  },
+  pages: {
+    signIn: "auth/login",
   },
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
