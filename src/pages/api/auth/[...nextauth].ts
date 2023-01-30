@@ -3,17 +3,56 @@ import CredentialsProvider from "next-auth/providers/credentials";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
-// import { env } from "../../../env/server.mjs";
+import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
+  session: { strategy: "jwt" },
+  secret: env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === "development" ? true : false,
   callbacks: {
-    session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
+    async jwt({ token, user, account }) {
+      const autoMergeIdentities = async () => {
+        const existingUser = await prisma.user.findFirst({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          where: { email: token.email! },
+        });
+
+        if (!existingUser) {
+          return token;
+        }
+
+        return {
+          ...existingUser,
+          ...token,
+        };
+      };
+
+      if (!user) {
+        return await autoMergeIdentities();
       }
-      return session;
+
+      if (account && account.type === "credentials") {
+        return {
+          ...token,
+
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        };
+      }
+
+      // The arguments above are from the provider so we need to look up the
+      // user based on those values in order to construct a JWT.
+
+      return token;
+    },
+    session({ session, token }) {
+      return {
+        ...session,
+        ...token,
+      };
     },
   },
   // Configure one or more authentication providers
@@ -34,6 +73,7 @@ export const authOptions: NextAuthOptions = {
         },
         password: { label: "Password", type: "password" },
       },
+
       async authorize(credentials) {
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value
@@ -43,7 +83,11 @@ export const authOptions: NextAuthOptions = {
         // (i.e., the request IP address)
 
         // If no error and we have user data, return it
-        const user = await prisma.user.findFirst({
+        if (!credentials) {
+          throw new Error("For some reason credentials are missing");
+        }
+
+        const user = await prisma.user.findUnique({
           where: { email: credentials?.email },
         });
 
