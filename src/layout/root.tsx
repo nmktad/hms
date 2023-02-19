@@ -79,14 +79,14 @@ export default function RootLayout({
                 <hr className="my-4 md:min-w-full" />
                 {/* Heading */}
                 <h6 className="text-blueGray-500 block pt-1 pb-4 text-xs font-bold uppercase no-underline md:min-w-full">
-                  Admin Layout Pages
+                  Employee
                 </h6>
                 {/* Navigation */}
 
                 <ul className="flex list-none flex-col md:min-w-full md:flex-col">
                   <li className="items-center">
                     <Link
-                      href="/admin/maps"
+                      href="/admin/employee"
                       className={
                         "block py-3 text-xs font-bold uppercase " +
                         (router.pathname.indexOf("/admin/maps") !== -1
@@ -102,7 +102,7 @@ export default function RootLayout({
                             : "text-blueGray-300")
                         }
                       ></i>{" "}
-                      Maps
+                      Register
                     </Link>
                   </li>
                 </ul>
@@ -176,10 +176,7 @@ export default function RootLayout({
       </nav>
 
       <div className="bg-blueGray-100 relative md:ml-64">
-        <div className="mx-auto min-h-screen w-full p-4 md:p-8">
-          hello world
-          {children}
-        </div>
+        <div className="mx-auto min-h-screen w-full p-4 md:p-8">{children}</div>
       </div>
     </>
   );

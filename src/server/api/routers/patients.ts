@@ -8,14 +8,18 @@ export const PatientsRouter = createTRPCRouter({
   }),
 
   getPatientInfo: protectedProcedure
-    .input(z.object({ name: z.string() }))
-    .query(async ({ input: { name }, ctx }) => {
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input: { id }, ctx }) => {
       return await ctx.prisma.patient.findFirst({
         where: {
-          name,
+          id,
         },
       });
     }),
+
+  getAll: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.patient.findMany();
+  }),
 
   createPatient: protectedProcedure
     .input(

@@ -65,6 +65,7 @@ model User {
     sessions      Session[]
     role          Role      @default(USER)
     Patient       Patient[]
+    address       String?
 }
 
 model VerificationToken {
